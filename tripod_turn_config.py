@@ -17,7 +17,10 @@ def knee_move(tripod,user_angle):
 		jj+=2
 
 def turn_config():
+	trialnum = 0
+	num = 0
 	while True:
+		print('\n(',trialnum,')')
 		print('\nTurn via rounded rectangular gait.','\nNOTE: safe values at: 90, 30, 90, 60')
 		print('\n------------------------------------------------------')
 		hipmid = int(input('\nStance angle of hip: '))
@@ -25,6 +28,7 @@ def turn_config():
 		kneerise = int(input('\nMax. rise angle of knee: '))
 		stridelength = int(input('\nMax width (angle) of gait: '))
 		direction = int(input('\nDirection of turn [1/-1]: '))
+		numturns = int(input('\nNumber of turns: '))
 		velocity = float(input('\nVelocity: '))
 		i=1
 
@@ -84,23 +88,34 @@ def turn_config():
 
 		
 		#initialize gait arrays with path segments
-		hiplist0 = [hip1, hip2, hip3, hip4, hip5, hip6, hip7, hip8, hip9, hip10, hip11, hip12, hip13, hip14]
-		kneelist0 = [knee1, knee2, knee3, knee4, knee5, knee6, knee7, knee8, knee9, knee10, knee11, knee12, knee13, knee14]
-		hiplist1 = [hip7, hip8, hip9, hip10, hip11, hip12, hip13, hip14, hip1, hip2, hip3, hip4, hip5, hip6]
-		kneelist1 = [knee7, knee8, knee9, knee10, knee11, knee12, knee13, knee14, knee1, knee2, knee3, knee4, knee5, knee6]
+		#hiplist0 = [hip1, hip2, hip3, hip4, hip5, hip6, hip7, hip8, hip9, hip10, hip11, hip12, hip13, hip14]
+		#kneelist0 = [knee1, knee2, knee3, knee4, knee5, knee6, knee7, knee8, knee9, knee10, knee11, knee12, knee13, knee14]
+		#hiplist1 = [hip7, hip8, hip9, hip10, hip11, hip12, hip13, hip14, hip1, hip2, hip3, hip4, hip5, hip6]
+		#kneelist1 = [knee7, knee8, knee9, knee10, knee11, knee12, knee13, knee14, knee1, knee2, knee3, knee4, knee5, knee6]
+		
+		hiplist0 = [hip14,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip2,hip3,hip4,hip5,hip6,hip7,hip8,hip9,hip10,hip11,hip12,hip13]
+		kneelist0 = [knee14,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee2,knee3,knee4,knee5,knee6,knee7,knee8,knee9,knee10,knee11,knee12,knee13]
+		hiplist1 = [hip3,hip4,hip5,hip6,hip7,hip8,hip9,hip10,hip11,hip12,hip13,hip14,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip1,hip2]
+		kneelist1 = [knee3,knee4,knee5,knee6,knee7,knee8,knee9,knee10,knee11,knee12,knee13,knee14,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee1,knee2]
 
-		j = 0
-		while j<=13:
-			hip_move(0,hiplist0[j])
-			knee_move(0,kneelist0[j])
-			hip_move(1,hiplist1[j])
-			knee_move(1,kneelist1[j])
-			time.sleep(velocity)
-			j+=1
+		while num<=numturns:
+			j = 0
+			while j<=21:
+				hip_move(0,hiplist0[j])
+				knee_move(0,kneelist0[j])
+				hip_move(1,hiplist1[j])
+				knee_move(1,kneelist1[j])
+				time.sleep(velocity)
+				j+=1
 
+		trialnum+=1
 
 try:
 	turn_config()
 except KeyboardInterrupt:
+	hip_move(0,90)
+	hip_move(1,90)
+	knee_move(0,30)
+	knee_move(1,30)
 	print('\nExiting.')
 	exit()
