@@ -40,18 +40,18 @@ J_servo = np.array([[5.99159296e-7, -4.80736752e-8, 7.35154348e-13],
                     [7.35154348e-13, 1.43035134e-11, 8.97966511e-7]])
 
 # Define directional vector ('forward/backward' vector for linear motion with angle and magnitude)
-direcvec = 0 ## this should change along with input direction (e.g. from joystick)
+direcvec = float(input('Angle off-norm for linear motion: ')) ## this should change along with input direction (e.g. from joystick)
 direcmagnitude = 1 ## 1 is normalized speed, with 0 stopped and 2 maximum speed
 direcvec = np.array([direcvec, direcmagnitude])
 
 # Angle variables (initial values for normal 'forward' x-axis and 90/90 hip/knee angles)
 ## base to HIP (mechanically fixed but will change w.r.t. directional vector)
-theta0 = 30 - direcvec[0]
+theta0 = (30 - direcvec[0])*((np.pi)/180)
 
 ## hip to KNEE (each leg 60 degrees from one another)
-phi0 = 90
+phi0 = 90*((np.pi)/180)
 ## knee to LEG ('splayed')
-psi0 = 90
+psi0 = 90*((np.pi)/180)
 
 ## Angle lists (per leg)
 print("\n-------------------------\nAngle list (single leg):\n-------------------------\n")
