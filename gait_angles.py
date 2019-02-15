@@ -38,25 +38,26 @@ J_servo = np.array([[5.99159296e-7, -4.80736752e-8, 7.35154348e-13],
                     [7.35154348e-13, 1.43035134e-11, 8.97966511e-7]])
 
 # Define directional vector ('forward/backward' vector for linear motion with angle and magnitude)
-direcvec = 0 ## this should change along with input direction (joystick)
+direcvec = 0 ## this should change along with input direction (e.g. from joystick)
 direcmagnitude = 1 ## 1 is normalized speed, with 0 stopped and 2 maximum speed
+direcvec = np.array([direcvec, direcmagnitude])
 
 # Angle variables (initial values for normal 'forward' x-axis and 90/90 hip/knee angles)
 ## base to HIP (mechanically fixed but will change w.r.t. directional vector)
-theta0 = 30 - direcvec
-theta1 = 90 - direcvec
-theta2 = 150 - direcvec
-theta3 = 210 - direcvec
-theta4 = 270 - direcvec
-theta5 = 330 - direcvec
-## hip to KNEE ()
+theta0 = 30 - direcvec[0]
+theta1 = 90 - direcvec[0]
+theta2 = 150 - direcvec[0]
+theta3 = 210 - direcvec[0]
+theta4 = 270 - direcvec[0]
+theta5 = 330 - direcvec[0]
+## hip to KNEE (each leg 60 degrees from one another)
 phi0 = 90
 phi1 = 90
 phi2 = 90
 phi3 = 90
 phi4 = 90
 phi5 = 90
-## knee to LEG ()
+## knee to LEG ('splayed')
 psi0 = 90
 psi1 = 90
 psi2 = 90
@@ -85,12 +86,14 @@ T_basetoHIP_0 = np.array([np.cos(theta0), np.sin(theta0), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_0 = np.array([np.cos(phi0), np.sin(phi0), 0, 0.04923984],
                          [-(np.sin(phi0)), np.cos(phi0), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
 T_kneetoEE_0 = np.array([np.cos(psi0), 0, np.sin(psi0), 0.0644906],
                          [0, 1, 0, 0],
-                         [-(np.sin(psi0), 0, np.cos(psi0), -0.0357124],
+                         [-(np.sin(psi0)), 0, np.cos(psi0), -0.0357124],
                          [0, 0, 0, 1])
+T_basetoEE_0 = np.dot(np.dot(T_basetoHIP_0,T_hiptoKNEE_0),T_kneetoEE_0)
+M_0 = mrcl.MatrixLog6(T_basetoEE_0) ## se(3) representation of exponential coordinates
 ## [[1]] Transformation matrix from radial center to EE1
 T_basetoHIP_1 = np.array([np.cos(theta1), np.sin(theta1), 0, 0.057803],
                          [-(np.sin(theta1)), np.cos(theta1), 0, 0],
@@ -98,11 +101,11 @@ T_basetoHIP_1 = np.array([np.cos(theta1), np.sin(theta1), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_1 = np.array([np.cos(phi1), np.sin(phi1), 0, 0.04923984],
                          [-(np.sin(phi1)), np.cos(phi1), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
 T_kneetoEE_1 = np.array([np.cos(psi1), 0, np.sin(psi1), 0.0644906],
                          [0, 1, 0, 0],
-                         [-(np.sin(psi1), 0, np.cos(psi1), -0.0357124],
+                         [-(np.sin(psi1)), 0, np.cos(psi1), -0.0357124],
                          [0, 0, 0, 1])
 ## [[2]] Transformation matrix from radial center to EE2
 T_basetoHIP_2 = np.array([np.cos(theta2), np.sin(theta2), 0, 0.057803],
@@ -111,11 +114,11 @@ T_basetoHIP_2 = np.array([np.cos(theta2), np.sin(theta2), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_2 = np.array([np.cos(phi2), np.sin(phi2), 0, 0.04923984],
                          [-(np.sin(phi2)), np.cos(phi2), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
 T_kneetoEE_2 = np.array([np.cos(psi2), 0, np.sin(psi2), 0.0644906],
                          [0, 1, 0, 0],
-                         [-(np.sin(psi2), 0, np.cos(psi2), -0.0357124],
+                         [-(np.sin(psi2)), 0, np.cos(psi2), -0.0357124],
                          [0, 0, 0, 1])
 ## [[3]] Transformation matrix from radial center to EE3
 T_basetoHIP_3 = np.array([np.cos(theta3), np.sin(theta3), 0, 0.057803],
@@ -124,9 +127,9 @@ T_basetoHIP_3 = np.array([np.cos(theta3), np.sin(theta3), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_3 = np.array([np.cos(phi3), np.sin(phi3), 0, 0.04923984],
                          [-(np.sin(phi3)), np.cos(phi3), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
-T_kneetoEE_3 = np.array([np.cos(psi3), 0, np.sin(psi3), 0.0644906],
+T_kneetoEE_3 = np.array([np.cos(psi3)), 0, np.sin(psi3), 0.0644906],
                          [0, 1, 0, 0],
                          [-(np.sin(psi3), 0, np.cos(psi3), -0.0357124],
                          [0, 0, 0, 1])
@@ -137,11 +140,11 @@ T_basetoHIP_4 = np.array([np.cos(theta4), np.sin(theta4), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_4 = np.array([np.cos(phi4), np.sin(phi4), 0, 0.04923984],
                          [-(np.sin(phi4)), np.cos(phi4), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
 T_kneetoEE_4 = np.array([np.cos(psi4), 0, np.sin(psi4), 0.0644906],
                          [0, 1, 0, 0],
-                         [-(np.sin(psi4), 0, np.cos(psi4), -0.0357124],
+                         [-(np.sin(psi4)), 0, np.cos(psi4), -0.0357124],
                          [0, 0, 0, 1])
 ## [[5]] Transformation matrix from radial center to EE5
 T_basetoHIP_5 = np.array([np.cos(theta5), np.sin(theta5), 0, 0.057803],
@@ -150,11 +153,11 @@ T_basetoHIP_5 = np.array([np.cos(theta5), np.sin(theta5), 0, 0.057803],
                          [0, 0, 0, 1])
 T_hiptoKNEE_5 = np.array([np.cos(phi5), np.sin(phi5), 0, 0.04923984],
                          [-(np.sin(phi5)), np.cos(phi5), 0, 0],
-                         [0, 0, 1, 0], # need to CHECK this z-displacement (!!!)
+                         [0, 0, 1, 0], ## need to CHECK this z-displacement (!!!)
                          [0, 0, 0, 1])
 T_kneetoEE_5 = np.array([np.cos(psi5), 0, np.sin(psi5), 0.0644906],
                          [0, 1, 0, 0],
-                         [-(np.sin(psi5), 0, np.cos(psi5), -0.0357124],
+                         [-(np.sin(psi5)), 0, np.cos(psi5), -0.0357124],
                          [0, 0, 0, 1])
 
-def establish_gait()
+def establish_gait(direcvec):
