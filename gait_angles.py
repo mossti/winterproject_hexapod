@@ -37,14 +37,18 @@ J_servo = np.array([[5.99159296e-7, -4.80736752e-8, 7.35154348e-13],
                     [-4.80736752e-8, 4.95518845e-7, 1.43035134e-11],
                     [7.35154348e-13, 1.43035134e-11, 8.97966511e-7]])
 
+# Define directional vector ('forward/backward' vector for linear motion with angle and magnitude)
+direcvec = 0 ## this should change along with input direction (joystick)
+direcmagnitude = 1 ## 1 is normalized speed, with 0 stopped and 2 maximum speed
+
 # Angle variables (initial values for normal 'forward' x-axis and 90/90 hip/knee angles)
 ## base to HIP (mechanically fixed but will change w.r.t. directional vector)
-theta0 = 30
-theta1 = 90
-theta2 = 150
-theta3 = 210
-theta4 = 270
-theta5 = 330
+theta0 = 30 - direcvec
+theta1 = 90 - direcvec
+theta2 = 150 - direcvec
+theta3 = 210 - direcvec
+theta4 = 270 - direcvec
+theta5 = 330 - direcvec
 ## hip to KNEE ()
 phi0 = 90
 phi1 = 90
@@ -60,12 +64,12 @@ psi3 = 90
 psi4 = 90
 psi5 = 90
 
-# Angle lists (radial)
+# Angle lists
+## Angle lists (radial)
 rAL_basetoHIP = np.array([theta0, theta1, theta2, theta3, theta4, theta5]) #these will change
 rAL_hiptoKNEE = np.array([phi0, phi1, phi2, phi3, phi4, phi5])
 rAL_kneetoLEG = np.array([psi0, psi1, psi2, psi3, psi4, psi5])
-
-# Angle lists (per leg)
+## Angle lists (per leg)
 legAL_0 = np.array([theta0, phi0, psi0])
 legAL_1 = np.array([theta1, phi1, psi1])
 legAL_2 = np.array([theta2, phi2, psi2])
@@ -152,3 +156,5 @@ T_kneetoEE_5 = np.array([np.cos(psi5), 0, np.sin(psi5), 0.0644906],
                          [0, 1, 0, 0],
                          [-(np.sin(psi5), 0, np.cos(psi5), -0.0357124],
                          [0, 0, 0, 1])
+
+def establish_gait()
