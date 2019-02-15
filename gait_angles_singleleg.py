@@ -58,7 +58,13 @@ print("\n-------------------------\nAngle list (single leg):\n------------------
 legAL_0 = np.array([theta0, phi0, psi0])
 print(legAL_0)
 
-## [[0]] Transformation matrix from radial center to EE0
+## Screw axes
+B_basetoHIP_0 = np.array([0, 0, 1, 0.056803, 0, -0.009611])
+B_hiptoKNEE_0 = np.array([0, 0, 1, 0.04923984, 0, 0])
+B_kneetoEE_0 = np.array([0, 1, 0, 0.0644906, 0, -0.0357124])
+B_list_0 = np.array([B_basetoHIP_0, B_hiptoKNEE_0, B_kneetoEE_0])
+
+## [[0]] Transformation matrix from radial center to EE0 at [30/90/90]
 T_basetoHIP_0 = np.array([[np.cos(theta0), np.sin(theta0), 0, 0.057803],
                          [-(np.sin(theta0)), np.cos(theta0), 0, 0],
                          [0, 0, 1, -0.009611],
@@ -79,3 +85,16 @@ print(T_basetoEE_0)
 print("\n----\nM_0:\n----\n")
 M_0 = mrcl.MatrixLog6(T_basetoEE_0) ## se(3) representation of exponential coordinates
 print(M_0)
+
+hipjoint = float(input('\n>> Please enter hip joint angle for TTM: '))*((np.pi)/180)
+print(hipjoint)
+kneejoint = float(input('>> Please enter knee joint angle for TTM: '))*((np.pi)/180)
+print(kneejoint)
+test_thetalist_0 = np.array([theta0, hipjoint, kneejoint])
+print(B_list_0)
+print(test_thetalist_0)
+
+print("\n--------------------------------\nTest Transformation Matrix:\n--------------------------------\n")
+test_transform_0 = mrcl.FKinBody(T_basetoEE_0, B_list_0.T, test_thetalist_0.T)
+print(test_transform_0)
+#[thetalist,success] = mrcl.IKinBody()
