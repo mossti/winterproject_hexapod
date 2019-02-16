@@ -49,23 +49,29 @@ direcvec = np.array([direcvec, direcmagnitude])
 theta0 = (30 - direcvec[0])*((np.pi)/180)
 
 ## hip to KNEE (each leg 60 degrees from one another)
-phi0 = 90*((np.pi)/180)
+phi0 = 0*((np.pi)/180)
 ## knee to LEG ('splayed')
-psi0 = 90*((np.pi)/180)
+psi0 = 0*((np.pi)/180)
 
 ## Angle lists (per leg)
 print("\n-------------------------\nAngle list (single leg):\n-------------------------\n")
 legAL_0 = np.array([theta0, phi0, psi0])
 print(legAL_0)
 
-## Screw axes
-B_basetoHIP_0 = np.array([0, 0, 1, 0.056803, 0, -0.009611])
-B_hiptoKNEE_0 = np.array([0, 0, 1, 0.04923984, 0, 0])
-B_kneetoEE_0 = np.array([0, 1, 0, 0.0644906, 0, -0.0357124])
-B_list_0 = np.array([B_basetoHIP_0, B_hiptoKNEE_0, B_kneetoEE_0])
+## Space screw axes
+S_basetoHIP_0 = np.array([0, 0, 1, 0, 0, 0])
+S_hiptoKNEE_0 = np.array([0, 0, 1, 0.057803, 0, 0])
+S_kneetoEE_0 = np.array([0, 1, 0, 0, 0, 0.04923984+0.057803])
+#S_basetoHIP_0 = np.array([0, 0, 1, -0.056803*np.sin(theta0), 0.056803*np.cos(theta0), 0])
+#S_hiptoKNEE_0 = np.array([0, 0, 1, -0.04923984*np.sin(phi0), 0.04923984*np.cos(phi0), 0])
+#S_kneetoEE_0 = np.array([0, 1, 0, -0.0644906*np.sin(psi0), 0, 0.0644906*np.cos(psi0)])
+#B_basetoHIP_0 = np.array([0, 0, 1, 0.056803+0.04923984+0.0644906, 0, -0.009611-0.0357124])
+#B_hiptoKNEE_0 = np.array([0, 0, 1, 0.04923984+0.0644906, 0, -0.0357124])
+#B_kneetoEE_0 = np.array([0, 1, 0, 0.0644906, 0, -0.0357124])
+S_list_0 = np.array([S_basetoHIP_0, S_hiptoKNEE_0, S_kneetoEE_0])
 
 ## [[0]] Transformation matrix from radial center to EE0 at [30/90/90]
-T_basetoHIP_0 = np.array([[np.cos(theta0), np.sin(theta0), 0, 0.057803],
+T_basetoHIP_0 = np.array([[np.cos(theta0), np.sin(theta0), 0, 0.0578104],
                          [-(np.sin(theta0)), np.cos(theta0), 0, 0],
                          [0, 0, 1, -0.009611],
                          [0, 0, 0, 1]])
@@ -79,8 +85,14 @@ T_kneetoEE_0 = np.array([[np.cos(psi0), 0, np.sin(psi0), 0.0644906],
                          [0, 0, 0, 1]])
 
 print("\n--------------\nT_basetoEE_0:\n--------------\n")
-T_basetoEE_0 = np.dot(np.dot(T_basetoHIP_0,T_hiptoKNEE_0),T_kneetoEE_0)
+T_basetoKNEE_0 = np.dot(T_basetoHIP_0,T_hiptoKNEE_0)
+T_basetoEE_0 = np.dot(T_basetoKNEE_0,T_kneetoEE_0)
 print(T_basetoEE_0)
+
+T_restingEE_0 = np.array([[0],
+                          [0],
+                          [0],
+                          [0]])
 
 print("\n----\nM_0:\n----\n")
 M_0 = mrcl.MatrixLog6(T_basetoEE_0) ## se(3) representation of exponential coordinates
@@ -91,10 +103,12 @@ print(hipjoint)
 kneejoint = float(input('>> Please enter knee joint angle for TTM: '))*((np.pi)/180)
 print(kneejoint)
 test_thetalist_0 = np.array([theta0, hipjoint, kneejoint])
-print(B_list_0)
+print("\nS_list_0: \n")
+print(S_list_0)
+print("\ntest_thetalist_0: \n")
 print(test_thetalist_0)
 
 print("\n--------------------------------\nTest Transformation Matrix:\n--------------------------------\n")
-test_transform_0 = mrcl.FKinBody(T_basetoEE_0, B_list_0.T, test_thetalist_0.T)
+test_transform_0 = mrcl.FKinBody(T_basetoEE_0, S_list_0.T, test_thetalist_0)
 print(test_transform_0)
 #[thetalist,success] = mrcl.IKinBody()
