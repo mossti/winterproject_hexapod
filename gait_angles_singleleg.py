@@ -123,9 +123,10 @@ L0z = -0.009611 #positive in space
 L0 = np.sqrt(0.0578104**2+(-0.009611)**2)
 L1 = 0.04923984
 L2 = np.sqrt(0.0644906**2+(-0.0357124)**2)
-currposz = L0z - L2*np.sin(kneejoint-50) #subtract from psi0 to accomodate curvature of leg
-currposy = L0x*np.sin(theta0) + (L1+L2*np.cos(kneejoint-50))*np.sin(hipjoint)
-currposx = L2*np.cos(kneejoint-50) + L1*(np.cos(theta0)) + L0x*np.cos(theta0)
+currposz = test_transform_0[2][3]#L0z - L2*np.sin(kneejoint-50) #subtract from psi0 to accomodate curvature of leg
+#currposy = ((L1+L2*np.cos(kneejoint-50))*np.sin(hipjoint) + L0x)*np.sin(theta0)
+currposy = test_transform_0[1][3]#(L2*np.cos(kneejoint-50)+ L1)*np.sin(hipjoint) + L0x*np.sin(theta0)
+currposx = test_transform_0[0][3]#(L2*np.cos(kneejoint-50) + L1)*(np.cos(hipjoint)) + L0x*np.cos(theta0)
 print("\ndist. x: ")
 print(currposx)
 print("\ndist. y: ")
