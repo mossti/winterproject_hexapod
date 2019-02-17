@@ -58,17 +58,17 @@ print("\n-------------------------\nAngle list (single leg):\n------------------
 legAL_0 = np.array([theta0, phi0, psi0])
 print(legAL_0)
 
-## Space screw axes
-S_basetoHIP_0 = np.array([0, 0, 1, 0, 0, 0])
-S_hiptoKNEE_0 = np.array([0, 0, 1, 0.057803, 0, 0])
-S_kneetoEE_0 = np.array([0, 1, 0, 0, 0, 0.04923984+0.057803])
+## Body screw axes
+B_basetoHIP_0 = np.array([0, 0, 1, 0, 0, 0])
+B_hiptoKNEE_0 = np.array([0, 0, 1, 0.057803, 0, 0])
+B_kneetoEE_0 = np.array([0, 1, 0, 0, 0, 0.04923984+0.057803])
 #S_basetoHIP_0 = np.array([0, 0, 1, -0.056803*np.sin(theta0), 0.056803*np.cos(theta0), 0])
 #S_hiptoKNEE_0 = np.array([0, 0, 1, -0.04923984*np.sin(phi0), 0.04923984*np.cos(phi0), 0])
 #S_kneetoEE_0 = np.array([0, 1, 0, -0.0644906*np.sin(psi0), 0, 0.0644906*np.cos(psi0)])
 #B_basetoHIP_0 = np.array([0, 0, 1, 0.056803+0.04923984+0.0644906, 0, -0.009611-0.0357124])
 #B_hiptoKNEE_0 = np.array([0, 0, 1, 0.04923984+0.0644906, 0, -0.0357124])
 #B_kneetoEE_0 = np.array([0, 1, 0, 0.0644906, 0, -0.0357124])
-S_list_0 = np.array([S_basetoHIP_0, S_hiptoKNEE_0, S_kneetoEE_0])
+B_list_0 = np.array([B_basetoHIP_0, B_hiptoKNEE_0, B_kneetoEE_0])
 
 ## [[0]] Transformation matrix from radial center to EE0 at [30/90/90]
 T_basetoHIP_0 = np.array([[np.cos(theta0), np.sin(theta0), 0, 0.0578104],
@@ -94,7 +94,7 @@ T_restingEE_0 = np.array([[0],
                           [0],
                           [0]])
 
-print("\n----\nM_0:\n----\n")
+print("\n------------------------\nMatrix Log [se(3) representation]:\n------------------------\n")
 M_0 = mrcl.MatrixLog6(T_basetoEE_0) ## se(3) representation of exponential coordinates
 print(M_0)
 
@@ -103,12 +103,34 @@ print(hipjoint)
 kneejoint = float(input('>> Please enter knee joint angle for TTM: '))*((np.pi)/180)
 print(kneejoint)
 test_thetalist_0 = np.array([theta0, hipjoint, kneejoint])
-print("\nS_list_0: \n")
-print(S_list_0)
-print("\ntest_thetalist_0: \n")
+print("\n------------\nS_list_0: \n------------\n")
+print(B_list_0)
+print("\n-----------------\ntest_thetalist_0: \n-----------------\n")
 print(test_thetalist_0)
 
 print("\n--------------------------------\nTest Transformation Matrix:\n--------------------------------\n")
-test_transform_0 = mrcl.FKinBody(T_basetoEE_0, S_list_0.T, test_thetalist_0)
+test_transform_0 = mrcl.FKinBody(T_basetoEE_0, B_list_0.T, test_thetalist_0)
 print(test_transform_0)
 #[thetalist,success] = mrcl.IKinBody()
+
+print("\n--------------------------------\nJacobian Body:\n--------------------------------\n")
+J_body = mrcl.JacobianBody(B_list_0.T, test_thetalist_0)
+print(J_body)
+
+print("\n--------------------------------------\nEE x/y/z distance displaced from rest: \n--------------------------------------")
+L0x = 0.0578104
+L0z = -0.009611 #positive in space
+L0 = np.sqrt(0.0578104**2+(-0.009611)**2)
+L1 = 0.04923984
+L2 = np.sqrt(0.0644906**2+(-0.0357124)**2)
+currposz = L0z - L2*np.sin(kneejoint-50) #subtract from psi0 to accomodate curvature of leg
+currposy = L0x*np.sin(theta0) + (L1+L2*np.cos(kneejoint-50))*np.sin(hipjoint)
+currposx = L2*np.cos(kneejoint-50) + L1*(np.cos(theta0)) + L0x*np.cos(theta0)
+print("\ndist. x: ")
+print(currposx)
+print("\ndist. y: ")
+print(currposy)
+print("\ndist. z: ")
+print(currposz)
+
+#traj = JointTrajectory(thetastart,thetaend,Tf,N,method)
