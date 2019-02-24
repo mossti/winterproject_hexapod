@@ -20,8 +20,8 @@ def manualset():
 			print('Exiting.')
 			exit()
 
-try:
-	manualset()
-except KeyboardInterrupt:
-	print('Exiting.')
-	exit()
+#try:
+#	manualset()
+#except KeyboardInterrupt:
+#	print('Exiting.')
+#	exit()
