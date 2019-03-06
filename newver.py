@@ -110,8 +110,126 @@ TbodyTOhip3 = np.dot(TbasecomROT3,TbprimeHIP)
 TbodyTOhip4 = np.dot(TbasecomROT4,TbprimeHIP)
 TbodyTOhip5 = np.dot(TbasecomROT5,TbprimeHIP)
 
+# function for assigning all new joint angles
+def newAnglesAssign(newphi0,newphi1,newphi2,newphi3,newphi4,newphi5,newpsi0,newpsi1,newpsi2,newpsi3,newpsi4,newpsi5):
+	# new angles
+	newPhi0 = newphi0*(np.pi/180)
+	newPhi1 = newphi1*(np.pi/180)
+	newPhi2 = newphi2*(np.pi/180)
+	newPhi3 = newphi3*(np.pi/180)
+	newPhi4 = newphi4*(np.pi/180)
+	newPhi5 = newphi5*(np.pi/180)
+	newPsi0 = newpsi0*(np.pi/180)
+	newPsi1 = newpsi1*(np.pi/180)
+	newPsi2 = newpsi2*(np.pi/180)
+	newPsi3 = newpsi3*(np.pi/180)
+	newPsi4 = newpsi4*(np.pi/180)
+	newPsi5 = newpsi5*(np.pi/180)
+	
+	# store new angles in list
+	AngleList0 = np.array({newphi0,newPsi0})
+	AngleList1 = np.array({newphi1,newPsi1})
+	AngleList2 = np.array({newphi2,newPsi2})
+	AngleList3 = np.array({newphi3,newPsi3})
+	AngleList4 = np.array({newphi4,newPsi4})
+	AngleList5 = np.array({newphi5,newPsi5})
+	
+	return AngleList0,AngleList1,AngleList2,AngleList3,AngleList4,AngleList5
 
+# function for performing FK in space for new angles
+def FKallSpace(aList0,aList1,aList2,aList3,aList4,aList5):
+	newPos0 = mrcl.FKinSpace(Mleg,Slist,aList0)
+	newPos1 = mrcl.FKinSpace(Mleg,Slist,aList1)
+	newPos2 = mrcl.FKinSpace(Mleg,Slist,aList2)
+	newPos3 = mrcl.FKinSpace(Mleg,Slist,aList3)
+	newPos4 = mrcl.FKinSpace(Mleg,Slist,aList4)
+	newPos5 = mrcl.FKinSpace(Mleg,Slist,aList5)
+	
+	return newPos0,newPos1,newPos2,newPos3,newPos4,newPos5
+	
+# function which converts FK's EE position from the hip frame to the (b') frame
+def convertFKtoBodyFrame(newP0,newP1,newP2,newP3,newP4,newP5):
+	newPos0b = np.dot(TbodyTOhip0,newP0)
+	newPos1b = np.dot(TbodyTOhip1,newP1)
+	newPos2b = np.dot(TbodyTOhip2,newP2)
+	newPos3b = np.dot(TbodyTOhip3,newP3)
+	newPos4b = np.dot(TbodyTOhip4,newP4)
+	newPos5b = np.dot(TbodyTOhip5,newP5)
+	
+	return newPos0b,newPos1b,newPos2b,newPos3b,newPos4b,newPos5b
 
+# function which subtracts the directional control from EE in (b') frame
+def calcStep(newP0b,newP1b,newP2b,newP3b,newP4b,newP5b,direcvecPLOT):
 
-def directionalgait_singleleg(legnum):
-	anglelist_0 = np.array([thetalist[legnum],phinot,-60*((np.pi)/180)])
+	newPos0bq = newP0b
+	newPos0bq[0][3] = (newP0b[0][3] - (1*direcvecPLOT[0])
+	newPos0bq[1][3] = (newP0b[1][3] - (1*direcvecPLOT[1])
+	newPos0bq[2][3] = (newP0b[2][3] - (1*direcvecPLOT[2])
+	
+	newPos1bq = newP1b
+	newPos1bq[0][3] = (newP1b[0][3] - (1*direcvecPLOT[0])
+	newPos1bq[1][3] = (newP1b[1][3] - (1*direcvecPLOT[1])
+	newPos1bq[2][3] = (newP1b[2][3] - (1*direcvecPLOT[2])
+	
+	newPos2bq = newP2b
+	newPos2bq[0][3] = (newP2b[0][3] - (1*direcvecPLOT[0])
+	newPos2bq[1][3] = (newP2b[1][3] - (1*direcvecPLOT[1])
+	newPos2bq[2][3] = (newP2b[2][3] - (1*direcvecPLOT[2])
+	
+	newPos3bq = newP3b
+	newPos3bq[0][3] = (newP3b[0][3] - (1*direcvecPLOT[0])
+	newPos3bq[1][3] = (newP3b[1][3] - (1*direcvecPLOT[1])
+	newPos3bq[2][3] = (newP3b[2][3] - (1*direcvecPLOT[2])
+	
+	newPos4bq = newP4b
+	newPos4bq[0][3] = (newP4b[0][3] - (1*direcvecPLOT[0])
+	newPos4bq[1][3] = (newP4b[1][3] - (1*direcvecPLOT[1])
+	newPos4bq[2][3] = (newP4b[2][3] - (1*direcvecPLOT[2])
+	
+	newPos5bq = newP5b
+	newPos5bq[0][3] = (newP5b[0][3] - (1*direcvecPLOT[0])
+	newPos5bq[1][3] = (newP5b[1][3] - (1*direcvecPLOT[1])
+	newPos5bq[2][3] = (newP5b[2][3] - (1*direcvecPLOT[2])
+	
+	return newPos0bq,newPos1bq,newPos2bq,newPos3bq,newPos4bq,newPos5bq
+
+# convert end-effector from (b') frame to hip frame for IK
+def convertPointBprimeFORIK(newP0bq,newP1bq,newP2bq,newP3bq,newP4bq,newP5bq):
+	
+	Tpinleg0 = mrcl.TransInv(TbodyTOhip0).newP0bq
+	Tpinleg1 = mrcl.TransInv(TbodyTOhip1).newP1bq
+	Tpinleg2 = mrcl.TransInv(TbodyTOhip2).newP2bq
+	Tpinleg3 = mrcl.TransInv(TbodyTOhip3).newP3bq
+	Tpinleg4 = mrcl.TransInv(TbodyTOhip4).newP4bq
+	Tpinleg5 = mrcl.TransInv(TbodyTOhip5).newP5bq
+	
+	return Tpinleg0, Tpinleg1, Tpinleg2, Tpinleg3, Tpinleg4, Tpinleg5
+
+# IK in space for all Tb',ee
+def IKallSpace(Tpl0,Tpl1,Tpl2,Tpl3,Tpl4,Tpl5,aList0,aList1,aList2,aList3,aList4,aList5):
+	
+	newAngles0 = mrcl.IKinSpace(Slist,Mleg,Tpl0,aList0,0.01,0.001)
+	newAngles1 = mrcl.IKinSpace(Slist,Mleg,Tpl1,aList1,0.01,0.001)
+	newAngles2 = mrcl.IKinSpace(Slist,Mleg,Tpl2,aList2,0.01,0.001)
+	newAngles3 = mrcl.IKinSpace(Slist,Mleg,Tpl3,aList3,0.01,0.001)
+	newAngles4 = mrcl.IKinSpace(Slist,Mleg,Tpl4,aList4,0.01,0.001)
+	newAngles5 = mrcl.IKinSpace(Slist,Mleg,Tpl5,aList5,0.01,0.001)
+
+	return newAngles0,newAngles1,newAngles2,newAngles3,newAngles4,newAngles5
+	
+def main():
+	aList0,aList1,aList2,aList3,aList4,aList5 = newAnglesAssign(0,0,0,0,0,0,-100,-100,-100,-100,-100,-100)
+	FKleg0,FKleg1,FKleg2,FKleg3,FKleg4,FKleg5 = FKallSpace(aList0,aList1,aList2,aList3,aList4,aList5)
+	FKbprime0,FKbprime1,FKbprime2,FKbprime3,FKbprime4,FKbprime5 = convertFKtoBodyFrame(FKleg0,FKleg1,FKleg2,FKleg3,FKleg4,FKleg5)
+	newPbpq0,newPbpq1,newPbpq2,newPbpq3,newPbpq4,newPbpq5 = calcStep(FKbprime0,FKbprime1,FKbprime2,FKbprime3,FKbprime4,FKbprime5,direcvecPLOT)
+	Tpinleg0, Tpinleg1, Tpinleg2, Tpinleg3, Tpinleg4, Tpinleg5 = convertPointBprimeFORIK(newPbpq0,newPbpq1,newPbpq2,newPbpq3,newPbpq4,newPbpq5)
+	newaList0,newaList1,newaList2,newaList3,newaList4,newaList5 = IKallSpace(Tpinleg0, Tpinleg1, Tpinleg2, Tpinleg3, Tpinleg4, Tpinleg5,aList0,aList1,aList2,aList3,aList4,aList5)
+	
+try:
+	main()
+except KeyboardInterrupt:
+	print('\nExiting.')
+	exit()
+	
+	
+	
