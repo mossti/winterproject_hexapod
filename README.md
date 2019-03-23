@@ -1,4 +1,7 @@
-# Winter Project 2019: Hexapod Dynamics
+# Winter Project 2019: Hexapodal Gait
+**MSR** - Northwestern University
+
+by Andrew Thompson
 
 ## Project Description
 
@@ -6,9 +9,9 @@ The aim of this project was (1) to design a modular walking algorithm for a six-
 
  Bio-inspired in this context refers to a gait without sharp deviations in its trajectory- an important quality that allows for real system to change direction at high speeds without requiring infinite torque. In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
 
-
+Click through the picture below to see the **demo video!**
 <a href="https://youtu.be/c8YuM24-HN4"><img src="images/hexapod.jpg"
-alt="Demo video" width="720" height="350" border="10"/></a>
+ width="720" height="350" border="10"/></a>
 
 All software required to run this code is in the **rpi0w** folder, and is meant to be run in a ROS environment on the Raspberry Pi Zero W used to control this hexapod. The working, final gait is titled: **joy_config_cleaned_bt.py**, and may be run from a properly compiled ROS workspace with:
  >**roslaunch hexapod_motion joy_config_cleaned_bt.py**.
