@@ -6,7 +6,7 @@ The aim of this project was (1) to design a modular walking algorithm for a six-
 
 In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
 
-<a href="https://youtu.be/c8YuM24-HN4" target="_blank"><img src="images/hexapod.jpg"
+<a href="https://youtu.be/c8YuM24-HN4"" target="_blank"><img src="images/hexapod.jpg"
 alt="Demo video" width="720" height="350" border="10"/></a>
 
 ---
