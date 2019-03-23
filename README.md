@@ -6,9 +6,8 @@ The aim of this project was (1) to design a modular walking algorithm for a six-
 
 In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
 
-<a href="https://youtu.be/c8YuM24-HN4
-" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" 
-alt="Demo video" width="240" height="180" border="10" /></a>
+<a href="https://youtu.be/c8YuM24-HN4" target="_blank"><img src="images/hexapod.jpg"
+alt="Demo video" width="720" height="350" border="10"/></a>
 
 ---
 
@@ -25,6 +24,10 @@ The body and legs of this hexapod were developed by Vorpal Robotics, a group tha
 The Vorpal Hexapod has an approximately cylindrical body used to house the electronic components. On this body are six hip slots, which hold one servo a piece. These servos are then connected to a two-piece swiveling 'thigh', which are in turn connected to the servo housing (the knee) of the leg.
 
 The Vorpal Hexapod legs are curved, which allow for an increased degree of stability despite the lack of rigid hip and knee joints. To clarify, the joints at both the hip and knee are fastened to the servo on one side, but remain on floating as they swivel on the other. This compliance in the design can be useful for overcoming small deviations in terrain, but also necessitate extra caution when adding components to the hexapod (weight more readily becomes a limitation).
+
+The legs have two perpendicular revolute joints:
+1. the hip joint (x6), which rotates about the *z-axis*.
+2. The knee joint (x6), which rotates about the *y-axis*.
 
 ## Custom parts
 
