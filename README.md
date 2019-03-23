@@ -1,4 +1,4 @@
-# Winter Project 2019: Hexapod Dynamics
+# Winter Project 2019: Hexapodal Gait
 
 ## Description
 
