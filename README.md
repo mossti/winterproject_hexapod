@@ -1,13 +1,19 @@
 # Winter Project 2019: Hexapod Dynamics
 
-## Description
+## Project Description
 
-The aim of this project was (1) to design a modular walking algorithm for a six-legged machine, and (2) for that algorithm to produce a bio-inspired gait. Bio-inspired in this context refers to a gait without sharp deviations in its trajectory- an important quality that allows for real system to change direction at high speeds without requiring infinite torque.
+The aim of this project was (1) to design a modular walking algorithm for a six-legged machine, and (2) for that algorithm to produce a bio-inspired gait.
 
-In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
+ Bio-inspired in this context refers to a gait without sharp deviations in its trajectory- an important quality that allows for real system to change direction at high speeds without requiring infinite torque. In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
 
-<a href="https://youtu.be/c8YuM24-HN4"" target="_blank"><img src="images/hexapod.jpg"
+
+<a href="https://youtu.be/c8YuM24-HN4"><img src="images/hexapod.jpg"
 alt="Demo video" width="720" height="350" border="10"/></a>
+
+All software required to run this code is in the **rpi0w** folder, and is meant to be run in a ROS environment on the Raspberry Pi Zero W used to control this hexapod. The working, final gait is titled: **joy_config_cleaned_bt.py**, and may be run from a properly compiled ROS workspace with:
+ >**roslaunch hexapod_motion joy_config_cleaned_bt.py**.
+
+Documents related to the specifics of this project are located in **spreadsheets_and_notes** and **mathematica_files**, respectively. All figures were created in Mathematica. Finally, supporting functions using Adafruit's servo module are included in **python3_supportfunctions**, and are intended to be used as small diagnostic tools.
 
 ---
 
@@ -109,6 +115,7 @@ In all cases, the angle values of the hip and knee of each leg are separated int
 
 ### Workspace
 
+Since each leg is 2R, the end-effector workspace will trace out a hyperbolic plane.
 
 ![alt text](images/gaitlines.png "Logo Title Text 1")
 
@@ -153,6 +160,9 @@ On-Angle gait describes any gait where the sum direction of motion lies in line 
 
 ## Troubleshooting
 
+### Servo Jitter
+If you have excessively noisy servos, make sure that the servo you are using is rated for the same PWM frequency that you are using. In the case of a Raspberry Pi, the PWM frequency is set by default, and cannot be changed without some complexity when using standard Python modules like *smbus*. I recommend using a service like ABElectronics' Python (2) PWM package, which enables the user to manually set PWM frequency.
+
 ### Force feedback
 When using a PS3 controller over Bluetooth, *joy_nod* will not recognize the 'force feedback' (i.e. rumble) functionality of the PS3 controller afforded by *ps3joy*. This will not cause any issues with the control scheme, but the error will look something like:
 
@@ -163,6 +173,6 @@ When running the launch file multiple times without resetting the Raspberry Pi Z
 
 ![alt text](images/error_socket.png "Logo Title Text 1")
 
-It is due to the PS3 controller not desyncing over Bluetooth with the Pi. Hold down the PS button on the controller and wait for ~10 seconds; there will be no verbose response in the terminal, but the controller will resync and work as expected.
+This is due to the PS3 controller not desyncing over Bluetooth with the Pi. Hold down the PS button on the controller and wait for ~10 seconds; there will be no verbose response in the terminal, but the controller will resync and work as expected.
 
 ---
