@@ -1,0 +1,8 @@
+<launch>
+
+	<rosparam file="$(find hexapod_motion)/config/joystick_param.yaml" command="load"/>
+	<node name="joy_node" pkg="joy" type="joy" respawn="false" output="screen">
+	
+	</node>	
+
+</launch>

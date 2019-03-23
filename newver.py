@@ -28,7 +28,7 @@ psi5 = (0)*(np.pi/180)
 
 ## directional angle and magnitude
 omega = (0)*(np.pi/180)
-magnitude = 0.05
+magnitude = 0.01
 
 ## hip to KNEE (each leg 60 degrees from one another)
 phinot = 0*((np.pi)/180)

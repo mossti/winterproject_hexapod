@@ -1,0 +1,11 @@
+<launch>
+
+<rosparam>
+    joy_node/dev: "/dev/input/js0"
+</rosparam>
+
+<node name="ps3joy" pkg="ps3joy" type="ps3joy.py"/>
+<node name="joy_node" pkg="joy" type="joy_node"/>
+<node name="joy_config_cleaned_bt" pkg="hexapod_motion" type="joy_config_cleaned_bt.py"/>
+
+</launch>
