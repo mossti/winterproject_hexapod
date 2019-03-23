@@ -1,10 +1,16 @@
-# Winter Project 2019: Hexapodal Gait
+# Winter Project 2019: Hexapod Dynamics
 
 ## Description
 
 The aim of this project was (1) to design a modular walking algorithm for a six-legged machine, and (2) for that algorithm to produce a bio-inspired gait. Bio-inspired in this context refers to a gait without sharp deviations in its trajectory- an important quality that allows for real system to change direction at high speeds without requiring infinite torque.
 
 In its current form, the hexapod has six directions (six gaits) with a variety tunable parameters. These will be discussed in the Software section.
+
+<a href="https://youtu.be/c8YuM24-HN4
+" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" 
+alt="Demo video" width="240" height="180" border="10" /></a>
+
+---
 
 # Hardware
 
@@ -22,7 +28,7 @@ The Vorpal Hexapod legs are curved, which allow for an increased degree of stabi
 
 ## Custom parts
 
-Although the chassis and leg components designed by Vorpal Robotics, the internal scaffolding as well as the 'feet' of this hexapod were designed specifically for this project.
+Although the chassis and leg components designed by Vorpal Robotics, the internal scaffolding as well as the 'feet' of this hexapod were designed (in Onshape) specifically for this project.
 
 ### Electronics Caddy
 
@@ -63,11 +69,15 @@ The bill of materials was influenced by the recommended components put forth by 
 1. TowerPro SG92R Servo (x12)
 2. PS3 Controller
 
+---
+
 # Software
 
 This project runs via a Raspberry Pi Zero W, and the files are executed from within a ROS workspace. Within the workspace, the scripts are written in Python (2).
 
 Outside of the ROS workspace, a number of '1-off' helper scripts for diagnostics exist, which run Python (3). The control scheme used for input is a PS3 controller via Bluetooth, though scripts are included which work with a wired PS3 controller as well as with keyboard input.
+
+Note, a wired PS3 controller will work with joy_node alone, although to use the wireless functionality afforded by Bluetooth the ps3joy module is required.
 
 ## Gait Algorithm
 
@@ -84,11 +94,15 @@ The gait algorithm depends on four initial parameters (listed with their accepta
 
 **kneerise** [~60:210]
 1. The *kneerise* variable is the angle (in degrees) that the knee will reach at it's maximum during a gait's rise cycle.
-2. This value minus the kneestance degines the 'height' of a gait pattern.
+2. This value minus the kneestance defines the 'height' of a gait pattern.
 
 
 **velocity** [0.02 minimum]
 1. the *velocity* variable determines the frequency at which leg motions will occur. Since the PWM frequency for these servos is 50 Hz, 0.02 is our minimum for reliable motion input.
+
+These four values are used to compute intermediary corner angles, which, when strung together, create an elliptical trajectory. By syncing these elliptical trajectories in different orientations and on different legs in sequence, the hexapod achieves multi-directional motion.
+
+In all cases, the angle values of the hip and knee of each leg are separated into arrays and fed into functions manipulate individual legs in an alternating tripod manner. This means that at any point during the gait, three feet will be in contact with the ground. This is essential for stability.
 
 ### Workspace
 
@@ -113,15 +127,26 @@ This hexapod is programmed to generate gaits in 6 directions (listed with their 
 
 ### Forward vs. Reverse
 
-
+Each gait pattern is reversible, an integral quality that allows for multi-directional motion.
 
 ### Normal Gait
 
+The 'Normal' gait is comprised of 14 steps. These 14 steps include:
+ 1. Four stride segments (two in contact with the ground and two off the ground) which sum to a length of stridelength/3.
+2. Eight corner segments, each with length stridelength/12 and height kneerise/6.
+3. Two pure rise components, each with height kneerise/3.
+
+![alt text](images/pjimage.jpg "Logo Title Text 1")
+
+Illustrated above is a half-gait cycle (read left to right, top to bottom), going from tripod 1 in stance and tripod 2 in rise to tripod 1 in rise and tripod 2 in stance.
+
 ### Turning Gait
+
+The Turning gaits are perhaps the simplest, with each of the six legs tracing out ellipses in the same direction and at simultaneous rates. The effect is a clockwise (or counter-clockwise) dragging of the body, reorienting the chassis.
 
 ### On-Angle Gait
 
-Push vs. Pull
+On-Angle gait describes any gait where the sum direction of motion lies in line with a leg. To combat the inherent restrictions of a 2R workspace while maintaining stability, the elliptical gait takes the form of a figure-8.
 
 ## Troubleshooting
 
@@ -137,4 +162,4 @@ When running the launch file multiple times without resetting the Raspberry Pi Z
 
 It is due to the PS3 controller not desyncing over Bluetooth with the Pi. Hold down the PS button on the controller and wait for ~10 seconds; there will be no verbose response in the terminal, but the controller will resync and work as expected.
 
-# Sources
+---
